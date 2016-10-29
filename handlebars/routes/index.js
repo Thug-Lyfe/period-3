@@ -1,33 +1,96 @@
 var express = require('express');
 var router = express.Router();
 var jokes = require(__base+ 'model/jokes.js');
+var mongo = require('mongodb');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' ,stuff:'click to get joke'});
-});
 
-router.get('/joke', function(req, res, next) {
-
-  res.render('joke', { title: 'Joke', joke: jokes.getRandomJoke()});
-});
-
-router.get('/allJokes', function(req, res, next) {
-  var j = [];
   jokes.allJokes(function (err, data) {
-    data.forEach(function(joke){
-      j.push(joke)
-    })
+  if(err)console.log(err);
+    else{
+  res.render('index', {
+    title: 'Express' ,
+    stuff:'click to get joke',
+    allJokes: data});
+   }
+});
+});
+
+router.get('/randomJoke', function(req, res, next) {
+  jokes.randomJoke(function(err,data){
+      if(err){console.log(err)}
+      else{
+        res.render('index', {
+          title: 'Express' ,
+          stuff:'click to get joke',
+          allJokes: data});
+      }
+
+  });
+});
+router.get('/allJokes', function(req, res, next) {
+  jokes.allJokes(function (err, data) {
+    if(err)console.log(err);
+    else{
+      res.render('index', {
+        title: 'Express' ,
+        stuff:'click to get joke',
+        allJokes: data});
+    }
+  });
+});
+
+router.get('/joke/:id', function(req, res, next) {
+  jokes.findJoke(req.params.id,function (err, data) {
+    if(err)console.log(err);
+    else{
+      res.render('index', {
+        title: 'Express' ,
+        stuff:'click to get joke',
+        allJokes: data});
+    }
+  });
+});
+
+router.post('/newJoke', function(req, res, next) {
+  var joke = {};
+  joke.joke = req.body.joke;
+  joke.lastEdited = new Date();
+  jokes.addJoke(joke,function(err,data){
+    if(err)console.log(err);
+    else{
+      res.render('index', {
+        title: 'Express' ,
+        stuff:'click to get joke',
+        allJokes: data});
+    }
   })
-  res.render('allJokes', { title: 'All Jokes', jokes: j});
+});
+router.put('/editJoke',function(req,res){
+  var joke = {};
+  joke.joke = req.body.joke;
+  joke.lastEdited = new Date();
+  jokes.editJoke(joke,function(err,data){
+    if(err)console.log(err)
+    else{
+      res.render('index', {
+        title: 'Express' ,
+        stuff:'click to get joke',
+        allJokes: data});
+    }
+  })
 });
 
-router.get('/newJoke', function(req, res, next) {
-  res.render('newJoke', { title: 'New Joke'});
+router.delete('deleteJoke/:id',function(req,res){
+  jokes.deleteJoke(req.params.id,function(err,data){
+    if(err)console.log(err);
+    else{
+      res.render('index', {
+        title: 'Express' ,
+        stuff:'click to get joke',
+        allJokes: data});
+    }
+  })
 });
-router.post('/storeJoke',function(req,res){
-  jokes.addJoke(req.body.njoke)
-  router.redirect('/newJoke')
-});
-
 module.exports = router;

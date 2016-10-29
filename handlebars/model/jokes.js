@@ -1,36 +1,58 @@
 /**
  * Created by butwhole on 05/09/2016.
  */
+var preId = "58149baa585e2f0589ae"
 var connection = require("../db/db");
-var mongodb = require('mongodb');
-var jokes = [
-    "alex is such a faggot, that it is not even funny anymore",
-    "at what age is it appropriate to tell your son he is not really a virgin",
-    "wat?"
-];
-
+var ObjectId = require('mongodb').ObjectId;
 
 module.exports.allJokes =   function(callback){
     var db = connection.get();
-
-    db.collection('jokes').find({}).toArray(function (err, data) {
-        if(err){ callback(err);}
-        else {callback(null,data);}
-    })
-    //var db = connection.close();
+    db.collection("jokes").find().toArray(function(err,data){
+        if(err) callback(err,null);
+        else callback(null,data);
+    });
+    //db.close();
 };
+
 module.exports.findJoke =   function(id,callback){
-
-    callback(null, jokes.get(id))
+    var db = connection.get();
+    db.collection("jokes").find({_id: ObjectId(preId+id)}).toArray(function(err,data){
+        if(err) callback(err,null);
+        else callback(null,data);
+    });
 };
+
 module.exports.addJoke =    function(jokeToAdd,callback){
     var db = connection.get();
-
+    db.collection("jokes").insertOne(jokeToAdd,function(err,data){
+        if(err) callback(err,null);
+        else callback(null,data);
+    });
 };
-module.exports.editJoke =   function(jokeToEdit,callback){};
-module.exports.deleteJoke = function(id,callback){};
+
+module.exports.editJoke =   function(jokeToEdit,callback){
+    var db = connection.get();
+    db.collection("jokes").replaceOne({_id: ObjectId(preId + JokeToEdit._id)},jokeToEdit,function(err,data){
+        if(err) callback(err,null);
+        else callback(null,data);
+    });
+};
+
+module.exports.deleteJoke = function(id,callback){
+    var db = connection.get();
+    db.collection("jokes").deleteOne({_id: ObjectId(preId + id)},function(err,data){
+        if(err) callback(err,null);
+        else callback(null,data);
+    });
+};
+
 module.exports.randomJoke = function randomJoke(callback){
-        return callback(jokes[Math.floor(Math.random() * jokes.length)]);
+    var db = connection.get();
+    var data = db.collection("jokes").find().toArray(function(err,data){
+        if(err) callback(err,null);
+        else callback(null,data[Math.floor(Math.random() * data.length)]);
+    });
+    //db.close();
     }
 
 

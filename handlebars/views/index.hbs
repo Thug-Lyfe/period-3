@@ -1,7 +1,27 @@
 <h1>{{title}}</h1>
 <p>{{stuff}}</p>
 <ul>
-    <li><a href="joke">get joke</a></li>
     <li><a href="allJokes">get all jokes</a></li>
-    <li><a href="newJoke">make new joke</a></li>
 </ul>
+
+<div>
+    <h2>jokes</h2>
+    <ul>
+        {{#each allJokes}}
+            <li>{{this._id}}. {{this.joke}}</li>
+        {{/each}}
+    </ul>
+</div>
+<br>
+
+<div>
+    <h2>Joke by Id</h2>
+    <p>type in the last 4 digets of the id with /joke/:id in the search bar</p>
+</div>
+<br>
+
+<div>
+    <h2>Random joke</h2>
+    <a href="randomJoke">get random joke</a>
+</div>
+

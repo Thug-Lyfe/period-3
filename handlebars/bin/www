@@ -7,28 +7,28 @@
 var app = require('../app');
 var debug = require('debug')('handlebars:server');
 var http = require('http');
+var db = require("../db/db");
 
 /**
  * Get port from environment and store in Express.
  */
-
+/*
 //localhost stuff
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
+*/
 
-/*
 //openshift stuff
-{
+
 var port = normalizePort(process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000);
 app.set('port', port);
 var ip = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
 app.set('ip',ip );
 var server = http.createServer(app);
 
-//The db.js file refered to in the slide-set
-var db = require("../model/db");
+
 //Connection string to your local database (replace xxx with relevant info)
-var connection_string = "mongodb://xxxxxxxxxxxxxxxx";
+var connection_string = "mongodb://localhost/handlebars";
 if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){
   connection_string = 'mongodb://'+ process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +
       process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@" +
@@ -45,8 +45,8 @@ db.connect(connection_string,function(err){
     server.on('error', onError);
     server.on('listening', onListening);
   }
-});}
-*/
+});
+
 /**
  * Create HTTP server.
  */
@@ -56,21 +56,6 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
-
-var db = require("../db/db");
-var connection_string = "mongodb://admin:test1234@ds019996.mlab.com:19996/testdatabase";
-//var connection_string = "mongodb://localhost:27017" // local database
-db.connect(connection_string,function(err){
-  if(err){
-    console.log("Could not connect to Database");
-    return;
-  } else
-  {
-    server.listen(port);
-    server.on('error', onError);
-    server.on('listening', onListening);
-  }
-});
 
 
 /**
