@@ -28,7 +28,7 @@ var server = http.createServer(app);
 
 
 //Connection string to your local database (replace xxx with relevant info)
-var connection_string = "mongodb://localhost/handlebars";
+var connection_string = "mongodb://localhost/jokes";
 if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){
   connection_string = 'mongodb://'+ process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +
       process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@" +
